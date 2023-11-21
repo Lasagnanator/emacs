@@ -1,0 +1,13 @@
+# Dirs
+auto-save-list/
+elpaca/
+parinfer-rust/
+transient/
+url/
+
+# Files
+*.*~
+config.el
+history
+places
+recentf

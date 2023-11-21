@@ -1,0 +1,307 @@
+#+TITLE: Lasagna's emacs config
+#+AUTHOR: Lasagnanator
+
+* General configuration
+
+** Variables
+
+#+begin_src emacs-lisp
+
+  (setq inhibit-startup-message t)
+  ; (setq visible-bell t)
+  (setq display-line-numbers-type 'relative)
+  (setq history-length 25)
+  (setq custom-file (locate-user-emacs-file "custom-vars.el"))
+  (load custom-file 'noerror 'nomessage)
+  (setq use-dialog-box nil)
+  (setq global-auto-revert-non-file-buffers t) ; For Dired
+
+#+end_src
+
+** Modes
+
+#+begin_src emacs-lisp
+
+  (menu-bar-mode 0)
+  (tool-bar-mode 0)
+  (scroll-bar-mode 0)
+  (global-display-line-numbers-mode 1)
+  (recentf-mode 1)
+  (savehist-mode 1)
+  (save-place-mode 1)
+  (global-auto-revert-mode 1)
+  (set-fringe-mode 10)
+  (tooltip-mode 0)
+
+#+end_src
+
+** Keys
+
+#+begin_src emacs-lisp
+
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+#+end_src
+
+* Plugins
+
+** Package manager
+
+*** Bootstrap
+
+#+begin_src emacs-lisp
+
+  (defvar elpaca-installer-version 0.6)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+				:ref nil
+				:files (:defaults "elpaca-test.el" (:exclude "extensions"))
+				:build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+	 (build (expand-file-name "elpaca/" elpaca-builds-directory))
+	 (order (cdr elpaca-order))
+	 (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (< emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+	  (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+		   ((zerop (call-process "git" nil buffer t "clone"
+					 (plist-get order :repo) repo)))
+		   ((zerop (call-process "git" nil buffer t "checkout"
+					 (or (plist-get order :ref) "--"))))
+		   (emacs (concat invocation-directory invocation-name))
+		   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+					 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+		   ((require 'elpaca))
+		   ((elpaca-generate-autoloads "elpaca" repo)))
+	      (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+
+	    (error "%s" (with-current-buffer buffer (buffer-string))))
+	((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
+
+#+end_src
+
+*** Use-package
+
+#+begin_src emacs-lisp
+
+  ;; Install use-package support
+  (elpaca elpaca-use-package
+    ;; Enable :elpaca use-package keyword.
+    (elpaca-use-package-mode)
+    ;; Assume :elpaca t unless otherwise specified.
+    (setq elpaca-use-package-by-default t))
+  ;; Block until current queue processed.
+  (elpaca-wait)
+
+#+end_src
+
+** Themes
+
+*** Catppuccin
+
+#+begin_src emacs-lisp
+
+  (use-package catppuccin-theme
+    :config
+    (load-theme 'catppuccin :no-confirm))
+
+#+end_src
+
+*** Dracula
+
+#+begin_src emacs-lisp
+
+  ; (use-package dracula-theme
+  ;   :config
+  ;   (load-theme 'dracula :no-confirm))
+
+#+end_src
+
+** Evil mode
+
+#+begin_src emacs-lisp
+
+  (use-package evil
+    :init ; tweak evil's configuration before loading it
+    (setq evil-want-integration t) ; This is optional since it's already set to t by default.
+    (setq evil-want-keybinding nil)
+    (setq evil-undo-mode 'undo-redo)
+    (setq evil-vsplit-window-right t)
+    (setq evil-split-window-below t)
+   (evil-mode))
+  (use-package evil-collection
+    :after evil
+    :config
+    (setq evil-collection-mode-list '(dashboard dired ibuffer))
+    (evil-collection-init))
+  (use-package evil-tutor)
+
+#+end_src
+
+** General
+
+#+begin_src emacs-lisp
+
+  (use-package general
+    :config
+    (general-evil-setup)
+    (general-create-definer leader-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "SPC" ; set leader
+      :global-prefix "M-SPC") ; access leader in insert mode
+    (leader-keys
+      "b" '(:ignore t :wk "buffer")
+      "b b" '(switch-to-buffer :wk "Switch buffer")
+      "b k" '(kill-this-buffer :wk "Kill this buffer")
+      "b n" '(next-buffer :wk "Next buffer")
+      "b p" '(previous-buffer :wk "Previous buffer")
+      "b r" '(revert-buffer :wk "Reload buffer"))
+    )
+
+#+end_src
+
+** Which-key
+
+#+begin_src emacs-lisp
+
+  (use-package which-key
+    :config
+    (which-key-mode))
+
+#+end_src
+
+** Ivy
+
+*** Base
+
+#+begin_src emacs-lisp
+
+  (use-package ivy  
+    :config
+    (ivy-mode))
+
+#+end_src
+
+*** Swiper
+
+#+begin_src emacs-lisp
+
+  (use-package swiper
+  :after ivy)
+
+#+end_src
+
+*** Counsel
+
+#+begin_src emacs-lisp
+
+  (use-package counsel
+    :after (ivy swiper)
+    :config
+    (counsel-mode))
+
+#+end_src
+
+** Doom modeline
+
+#+begin_src emacs-lisp
+
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
+
+#+end_src
+
+* Git
+
+** Magit
+
+*** Base
+
+#+begin_src emacs-lisp
+
+  (use-package magit
+    :commands (magit-status magit-get-current-branch)
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+#+end_src
+
+*** Forge
+
+#+begin_src emacs-lisp
+
+  (use-package forge)
+
+#+end_src
+
+** Projectile
+
+#+begin_src emacs-lisp
+
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    (when (file-directory-p "~/Projects/Code")
+      (setq projectile-project-search-path '("~/Projects/Code")))
+    (setq projectile-switch-project-action #'projectile-dired))
+
+#+end_src
+
+*** Counsel-projectile
+
+#+begin_src emacs-lisp
+
+  (use-package counsel-projectile
+    :after (counsel projectile)
+    :config
+    (counsel-projectile-mode))
+
+#+end_src
+
+* Languages
+
+** Emacs Lisp
+
+*** Parinfer
+
+#+begin_src emacs-lisp
+
+  (use-package parinfer-rust-mode
+    :hook emacs-lisp-mode)  
+
+#+end_src
+
+* ORG Mode
+
+** Org-tempo
+
+#+begin_src emacs-lisp
+
+  (require 'org-tempo)
+
+#+end_src
+
+** Settings
+
+#+begin_src emacs-lisp
+
+  (electric-indent-mode -1)
+
+#+end_src
