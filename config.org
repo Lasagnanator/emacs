@@ -150,7 +150,7 @@
   (use-package evil-collection
     :after evil
     :config
-    ;(setq evil-collection-mode-list '(dashboard dired ibuffer magit))
+    ;(setq evil-collection-mode-list '(dashboard dired ibuffer magit)) ; if I want to set evil binds for only some modes
     (evil-collection-init))
   (use-package evil-tutor)
 
