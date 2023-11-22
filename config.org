@@ -43,11 +43,9 @@
 
 #+end_src
 
-* Plugins
+* Package manager
 
-** Package manager
-
-*** Bootstrap
+** Bootstrap
 
 #+begin_src emacs-lisp
 
@@ -91,7 +89,7 @@
 
 #+end_src
 
-*** Use-package
+** Use-package
 
 #+begin_src emacs-lisp
 
@@ -106,13 +104,16 @@
 
 #+end_src
 
-** Themes
+* Plugins
+
+** Theme
 
 *** Catppuccin
 
 #+begin_src emacs-lisp
 
   (use-package catppuccin-theme
+    :init (setq catppuccin-flavour 'mocha)
     :config
     (load-theme 'catppuccin :no-confirm))
 
@@ -122,9 +123,9 @@
 
 #+begin_src emacs-lisp
 
-  ; (use-package dracula-theme
-  ;   :config
-  ;   (load-theme 'dracula :no-confirm))
+  (use-package dracula-theme)
+    ;:config
+    ;(load-theme 'dracula :no-confirm))
 
 #+end_src
 
@@ -143,7 +144,7 @@
   (use-package evil-collection
     :after evil
     :config
-    (setq evil-collection-mode-list '(dashboard dired ibuffer))
+    ;(setq evil-collection-mode-list '(dashboard dired ibuffer magit))
     (evil-collection-init))
   (use-package evil-tutor)
 
@@ -302,6 +303,6 @@
 
 #+begin_src emacs-lisp
 
-  (electric-indent-mode -1)
+  (electric-indent-mode 0)
 
 #+end_src
