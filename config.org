@@ -112,29 +112,6 @@
 
 * Plugins
 
-** Theme
-
-*** Catppuccin
-
-#+begin_src emacs-lisp
-
-  (use-package catppuccin-theme
-    :init (setq catppuccin-flavour 'mocha)
-    :config
-    (load-theme 'catppuccin :no-confirm))
-
-#+end_src
-
-*** Dracula
-
-#+begin_src emacs-lisp
-
-  (use-package dracula-theme)
-    ;:config
-    ;(load-theme 'dracula :no-confirm))
-
-#+end_src
-
 ** Evil mode
 
 #+begin_src emacs-lisp
@@ -221,6 +198,59 @@
 
 #+end_src
 
+*** Ivy-rich
+
+#+begin_src emacs-lisp
+
+  (use-package ivy-rich
+    :init
+    (ivy-rich-mode 1)
+    :config
+    (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
+
+#+end_src
+
+** Helpful
+
+#+begin_src emacs-lisp
+
+  (use-package helpful
+    :config
+    (global-set-key (kbd "C-h f") #'helpful-callable)
+    (global-set-key (kbd "C-h v") #'helpful-variable)
+    (global-set-key (kbd "C-h k") #'helpful-key)
+    (global-set-key (kbd "C-h x") #'helpful-command)
+    (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+    (global-set-key (kbd "C-h F") #'helpful-function))
+
+#+end_src
+
+* Interface
+
+** Themes
+
+*** Catppuccin
+
+#+begin_src emacs-lisp
+
+  (use-package catppuccin-theme
+    :init (setq catppuccin-flavour 'mocha)
+    :config
+    (load-theme 'catppuccin :no-confirm))
+
+#+end_src
+
+*** Dracula
+
+#+begin_src emacs-lisp
+
+  (use-package dracula-theme)
+    ;:config
+    ;(load-theme 'dracula :no-confirm))
+
+#+end_src
+
+
 ** Doom modeline
 
 #+begin_src emacs-lisp
@@ -229,6 +259,15 @@
     :ensure t
     :init (doom-modeline-mode 1)
     :custom ((doom-modeline-height 15)))
+
+#+end_src
+
+** Icons
+
+#+begin_src emacs-lisp
+
+  (use-package all-the-icons
+    :if (display-graphic-p))
 
 #+end_src
 
