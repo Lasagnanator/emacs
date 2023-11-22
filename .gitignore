@@ -1,5 +1,6 @@
 # Dirs
 auto-save-list/
+elpa/
 elpaca/
 parinfer-rust/
 transient/
@@ -8,6 +9,7 @@ url/
 # Files
 *.*~
 config.el
+forge*
 history
 places
 recentf
