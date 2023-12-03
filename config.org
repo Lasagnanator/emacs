@@ -110,7 +110,7 @@
 
 #+end_src
 
-* Plugins
+* Utilities
 
 ** Evil mode
 
@@ -120,7 +120,7 @@
     :init ; tweak evil's configuration before loading it
     (setq evil-want-integration t) ; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
-    (setq evil-undo-mode 'undo-redo)
+    (setq evil-undo-system 'undo-redo)
     (setq evil-vsplit-window-right t)
     (setq evil-split-window-below t)
    (evil-mode))
@@ -168,8 +168,6 @@
 
 ** Ivy
 
-*** Base
-
 #+begin_src emacs-lisp
 
   (use-package ivy  
@@ -178,27 +176,7 @@
 
 #+end_src
 
-*** Swiper
-
-#+begin_src emacs-lisp
-
-  (use-package swiper
-  :after ivy)
-
-#+end_src
-
-*** Counsel
-
-#+begin_src emacs-lisp
-
-  (use-package counsel
-    :after (ivy swiper)
-    :config
-    (counsel-mode))
-
-#+end_src
-
-*** Ivy-rich
+** Ivy-rich
 
 #+begin_src emacs-lisp
 
@@ -207,6 +185,26 @@
     (ivy-rich-mode 1)
     :config
     (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
+
+#+end_src
+
+** Swiper
+
+#+begin_src emacs-lisp
+
+  (use-package swiper
+  :after ivy)
+
+#+end_src
+
+** Counsel
+
+#+begin_src emacs-lisp
+
+  (use-package counsel
+    :after (ivy swiper)
+    :config
+    (counsel-mode))
 
 #+end_src
 
@@ -275,8 +273,6 @@
 
 ** Magit
 
-*** Base
-
 #+begin_src emacs-lisp
 
   (use-package magit
@@ -286,7 +282,7 @@
 
 #+end_src
 
-*** Forge
+** Forge
 
 #+begin_src emacs-lisp
 
@@ -321,11 +317,85 @@
 
 #+end_src
 
-* Languages
+* IDE
 
-** Emacs Lisp
+** Highlighting
 
-*** Parinfer
+** LSP
+
+#+begin_src emacs-lisp
+
+  (use-package lsp-mode
+    :hook ((lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
+
+#+end_src
+
+*** Optional packages
+
+#+begin_src emacs-lisp
+
+  (use-package lsp-ui 
+    :commands lsp-ui-mode)
+  (use-package lsp-ivy
+    :commands lsp-ivy-workspace-symbol)
+  ;(use-package lsp-treemacs
+  ; :commands lsp-treemacs-errors-list)
+
+#+end_src
+
+** Completion
+
+#+begin_src emacs-lisp
+
+  (use-package company
+    :custom
+    (company-minimum-prefix-length 2)
+    (global-company-mode t))
+
+  (use-package company-box
+    :after company
+    :hook (company-mode . company-box-mode))
+
+#+end_src
+
+** Snippets
+
+#+begin_src emacs-lisp
+
+  (use-package yasnippet)
+
+#+end_src
+
+** Languages
+
+*** Lua
+
+#+begin_src emacs-lisp
+
+  (use-package lua-mode
+    :hook (lsp))
+
+#+end_src
+
+*** Python
+
+#+begin_src emacs-lisp
+
+  (use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+			   (require 'lsp-pyright)
+			   (lsp))))  ; or lsp-deferred
+
+#+end_src
+
+*** Emacs Lisp
+
+**** Parinfer
+
+I should probably change it for a more integrated solution.
+Also change how tabs work.
 
 #+begin_src emacs-lisp
 

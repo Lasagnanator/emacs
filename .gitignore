@@ -1,4 +1,5 @@
 # Dirs
+.cache/
 auto-save-list/
 elpa/
 elpaca/
