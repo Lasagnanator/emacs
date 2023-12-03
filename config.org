@@ -321,6 +321,16 @@
 
 ** Highlighting
 
+*** Tree-sitter
+
+#+begin_src emacs-lisp
+
+  (setq treesit-language-source-alist
+    '((python "https://github.com/tree-sitter/tree-sitter-python")
+      (lua "https://github.com/Azganoth/tree-sitter-lua")))
+
+#+end_src
+
 ** LSP
 
 #+begin_src emacs-lisp
@@ -374,7 +384,7 @@
 #+begin_src emacs-lisp
 
   (use-package lua-mode
-    :hook (lsp))
+    :config (lsp))
 
 #+end_src
 
@@ -421,3 +431,19 @@ Also change how tabs work.
   (electric-indent-mode 0)
 
 #+end_src
+
+* TODO List
+
+** TODO IDE
+
+- [ ] Add basic LSP functionality
+- [ ] Add Treesitter
+- [ ] Check why the Python LSP is giving fewer results than Neovim
+
+** TODO Org mode
+
+*** TODO modes to check
+
+- [ ] Org-roam
+- [ ] Org-agenda (built-in)
+- [ ] Org-schedule (built-in)

@@ -5,6 +5,7 @@ elpa/
 elpaca/
 parinfer-rust/
 transient/
+tree-sitter/
 url/
 
 # Files
@@ -12,5 +13,6 @@ url/
 config.el
 forge*
 history
+.lsp-session*
 places
 recentf
