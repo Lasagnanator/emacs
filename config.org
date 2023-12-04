@@ -227,6 +227,30 @@
 
 ** Themes
 
+*** Doom themes megapack
+
+#+begin_src emacs-lisp
+
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    ;(load-theme 'doom-one t)
+
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    ;(doom-themes-neotree-config)
+    ;; or for treemacs users
+    (setq doom-themes-treemacs-theme "doom-colors") ; use "doom-colors" for less minimal icon theme
+    (doom-themes-treemacs-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+
+#+end_src
+
 *** Catppuccin
 
 #+begin_src emacs-lisp
@@ -234,7 +258,7 @@
   (use-package catppuccin-theme
     :init (setq catppuccin-flavour 'mocha)
     :config
-    (load-theme 'catppuccin :no-confirm))
+    (load-theme 'catppuccin t))
 
 #+end_src
 
@@ -244,7 +268,7 @@
 
   (use-package dracula-theme)
     ;:config
-    ;(load-theme 'dracula :no-confirm))
+    ;(load-theme 'dracula t))
 
 #+end_src
 
