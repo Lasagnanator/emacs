@@ -349,9 +349,19 @@
 
 #+begin_src emacs-lisp
 
-  (setq treesit-language-source-alist
-    '((python "https://github.com/tree-sitter/tree-sitter-python")
-      (lua "https://github.com/Azganoth/tree-sitter-lua")))
+  ; (setq treesit-language-source-alist
+  ;   '((python "https://github.com/tree-sitter/tree-sitter-python")
+  ;     (lua "https://github.com/Azganoth/tree-sitter-lua")
+
+#+end_src
+
+*** Treesit-auto
+
+#+begin_src emacs-lisp
+
+  (use-package treesit-auto
+    :config
+    (global-treesit-auto-mode))
 
 #+end_src
 
