@@ -8,13 +8,16 @@
 #+begin_src emacs-lisp
 
   (setq inhibit-startup-message t)
-  ; (setq visible-bell t)
-  (setq display-line-numbers-type 'relative)
+  (setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
+  (setq display-line-numbers-type 'visual)
   (setq history-length 25)
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
   (load custom-file 'noerror 'nomessage)
   (setq use-dialog-box nil)
   (setq global-auto-revert-non-file-buffers t) ; For Dired
+  (setq scroll-step 1)
+  (setq scroll-margin 4)
+  (setq scroll-conservatively 9999)
 
 #+end_src
 
@@ -28,8 +31,7 @@
   (column-number-mode)
   (global-display-line-numbers-mode t)
   ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-		  term-mode-hook
+  (dolist (mode '(term-mode-hook
 		  eshell-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
   (recentf-mode 1)
@@ -38,6 +40,10 @@
   (global-auto-revert-mode 1)
   (set-fringe-mode 10)
   (tooltip-mode 0)
+  (electric-indent-mode nil)
+  (delete-selection-mode 1)
+  (electric-pair-mode 1)
+  (delete-selection-mode t)
 
 #+end_src
 
@@ -123,11 +129,16 @@
     (setq evil-undo-system 'undo-redo)
     (setq evil-vsplit-window-right t)
     (setq evil-split-window-below t)
+    :config
+    ; (evil-define-key 'normal 'global (kbd "M-h") 'evil-window-left)
+    ; (evil-define-key 'normal 'global (kbd "M-j") 'evil-window-down)
+    ; (evil-define-key 'normal 'global (kbd "M-k") 'evil-window-up)
+    ; (evil-define-key 'normal 'global (kbd "M-l") 'evil-window-right)
    (evil-mode))
   (use-package evil-collection
     :after evil
     :config
-    ;(setq evil-collection-mode-list '(dashboard dired ibuffer magit)) ; if I want to set evil binds for only some modes
+    ; (setq evil-collection-mode-list '(dashboard dired ibuffer magit)) ; if I want to set evil binds for only some modes
     (evil-collection-init))
   (use-package evil-tutor)
 
@@ -145,14 +156,16 @@
       :keymaps 'override
       :prefix "SPC" ; set leader
       :global-prefix "M-SPC") ; access leader in insert mode
+
+    ;; Buffer
     (leader-keys
       "b" '(:ignore t :wk "buffer")
       "b b" '(switch-to-buffer :wk "Switch buffer")
       "b k" '(kill-this-buffer :wk "Kill this buffer")
       "b n" '(next-buffer :wk "Next buffer")
       "b p" '(previous-buffer :wk "Previous buffer")
-      "b r" '(revert-buffer :wk "Reload buffer"))
-    )
+      "b r" '(revert-buffer :wk "Reload buffer")
+      "b i" '(ibuffer :wk "Open ibuffer")))
 
 #+end_src
 
@@ -166,45 +179,108 @@
 
 #+end_src
 
-** Ivy
+** Pickers
+
+*** Vertico
 
 #+begin_src emacs-lisp
 
-  (use-package ivy  
-    :config
-    (ivy-mode))
-
-#+end_src
-
-** Ivy-rich
-
-#+begin_src emacs-lisp
-
-  (use-package ivy-rich
+  (use-package vertico
     :init
-    (ivy-rich-mode 1)
-    :config
-    (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
+    (vertico-mode)
+    (savehist-mode)
+    (setq vertico-scroll-margin 2)
+    (setq vertico-count 15)
+    (setq vertico-resize nil))
 
 #+end_src
 
-** Swiper
+*** Consult
 
 #+begin_src emacs-lisp
 
-  (use-package swiper
-  :after ivy)
+  (use-package consult
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+    :init
+    (setq register-preview-delay 0.5
+	  register-preview-function #'consult-register-format)
+    (advice-add #'register-preview :override #'consult-register-window)
+    :config
+    (setq consult-narrow-key "<"))
 
 #+end_src
 
-** Counsel
+*** Orderless
 
 #+begin_src emacs-lisp
 
-  (use-package counsel
-    :after (ivy swiper)
-    :config
-    (counsel-mode))
+  (use-package orderless
+    :init
+    ;; Configure a custom style dispatcher (see the Consult wiki)
+    ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+    ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+    (setq completion-styles '(orderless basic)
+	  completion-category-defaults nil
+	  completion-category-overrides '((file (styles partial-completion)))))
+
+#+end_src
+
+*** Marginalia
+
+#+begin_src emacs-lisp
+
+  (use-package marginalia
+    ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+    ;; available in the *Completions* buffer, add it to the
+    ;; `completion-list-mode-map'.
+    :bind (:map minibuffer-local-map
+	   ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
+
+#+end_src
+
+** Ivy completion
+
+*** Ivy
+
+#+begin_src emacs-lisp
+
+  ; (use-package ivy  
+  ;   :config
+  ;   (ivy-mode))
+
+#+end_src
+
+*** Ivy-rich
+
+#+begin_src emacs-lisp
+
+  ; (use-package ivy-rich
+  ;   :init
+  ;   (ivy-rich-mode 1)
+  ;   :config
+  ;   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
+
+#+end_src
+
+*** Swiper
+
+#+begin_src emacs-lisp
+
+  ; (use-package swiper
+  ;   :after ivy)
+
+#+end_src
+
+*** Counsel
+
+#+begin_src emacs-lisp
+
+  ; (use-package counsel
+  ;   :after (ivy swiper)
+  ;   :config
+  ;   (counsel-mode))
 
 #+end_src
 
@@ -223,6 +299,83 @@
 
 #+end_src
 
+** Treemacs
+
+#+begin_src emacs-lisp
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (treemacs-follow-mode t)
+  (treemacs-filewatch-mode t)
+  (treemacs-fringe-indicator-mode 'always)
+  (when treemacs-python-executable
+    (treemacs-git-commit-diff-mode t))
+  (pcase (cons (not (null (executable-find "git")))
+               (not (null treemacs-python-executable)))
+    (`(t . t)
+     (treemacs-git-mode 'deferred))
+    (`(t . _)
+     (treemacs-git-mode 'simple)))
+
+  (treemacs-hide-gitignored-files-mode nil))
+
+#+end_src
+
+*** Additional packages
+
+#+begin_src emacs-lisp
+
+  (use-package treemacs-evil
+    :after (treemacs evil)
+    :ensure t)
+
+  (use-package treemacs-projectile
+    :after (treemacs projectile)
+    :ensure t)
+
+  (use-package treemacs-icons-dired
+    :hook (dired-mode . treemacs-icons-dired-enable-once)
+    :ensure t)
+
+  (use-package treemacs-magit
+    :after (treemacs magit)
+    :ensure t)
+
+#+end_src
+
+** Evil-surround
+
+#+begin_src emacs-lisp
+
+  (use-package evil-surround
+    :config
+    (global-evil-surround-mode 1))
+
+#+end_src
+
+** Commentary
+
+#+begin_src emacs-lisp
+
+  (use-package evil-commentary
+    :config
+    (evil-commentary-mode))
+
+#+end_src
+
+** Sudo-edit
+
+#+begin_src emacs-lisp
+
+  (use-package sudo-edit)
+
+#+end_src
+
 * Interface
 
 ** Themes
@@ -237,7 +390,7 @@
     ;; Global settings (defaults)
     (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    ;(load-theme 'doom-one t)
+    (load-theme 'doom-dracula t)
 
     ;; Enable flashing mode-line on errors
     (doom-themes-visual-bell-config)
@@ -257,8 +410,9 @@
 
   (use-package catppuccin-theme
     :init (setq catppuccin-flavour 'mocha)
-    :config
-    (load-theme 'catppuccin t))
+    ; :config
+    ; (load-theme 'catppuccin t)
+    )
 
 #+end_src
 
@@ -290,6 +444,18 @@
 
   (use-package all-the-icons
     :if (display-graphic-p))
+
+#+end_src
+
+** Dired customizations
+
+#+begin_src emacs-lisp
+
+  (use-package diredfl
+    :config
+    (diredfl-global-mode))
+
+  (use-package all-the-icons-dired)
 
 #+end_src
 
@@ -349,9 +515,10 @@
 
 #+begin_src emacs-lisp
 
-  ; (setq treesit-language-source-alist
-  ;   '((python "https://github.com/tree-sitter/tree-sitter-python")
-  ;     (lua "https://github.com/Azganoth/tree-sitter-lua")
+  (setq treesit-font-lock-level 4)
+  (setq treesit-language-source-alist
+    '((python "https://github.com/tree-sitter/tree-sitter-python")
+      (lua "https://github.com/Azganoth/tree-sitter-lua")))
 
 #+end_src
 
@@ -381,10 +548,10 @@
 
   (use-package lsp-ui 
     :commands lsp-ui-mode)
-  (use-package lsp-ivy
-    :commands lsp-ivy-workspace-symbol)
-  ;(use-package lsp-treemacs
-  ; :commands lsp-treemacs-errors-list)
+  ; (use-package lsp-ivy
+  ;   :commands lsp-ivy-workspace-symbol)
+  ; (use-package lsp-treemacs
+  ;   :commands lsp-treemacs-errors-list)
 
 #+end_src
 
@@ -428,13 +595,39 @@
 
   (use-package lsp-pyright
     :ensure t
-    :hook (python-mode . (lambda ()
-			   (require 'lsp-pyright)
-			   (lsp))))  ; or lsp-deferred
+    :hook (python-ts-mode . (lambda ()
+			     (require 'lsp-pyright)
+			     (lsp))))  ; or lsp-deferred
+
+#+end_src
+
+*** Javascript
+
+#+begin_src emacs-lisp
+
+  (use-package rjsx-mode)
 
 #+end_src
 
 *** Emacs Lisp
+
+**** Lispy
+
+#+begin_src emacs-lisp
+
+  (use-package lispyville
+    :hook (emacs-lisp-mode lisp-mode)
+    :config
+    (lispyville-set-key-theme
+     '(operators
+       c-w
+       prettify
+       commentary
+       slurp/barf-cp
+       additional
+       additional-insert)))
+
+#+end_src
 
 **** Parinfer
 
@@ -443,12 +636,22 @@ Also change how tabs work.
 
 #+begin_src emacs-lisp
 
-  (use-package parinfer-rust-mode
-    :hook emacs-lisp-mode)  
+  ; (use-package parinfer-rust-mode
+  ;   :hook emacs-lisp-mode  
 
 #+end_src
 
 * ORG Mode
+
+** Settings
+
+#+begin_src emacs-lisp
+
+  (setq org-hide-emphasis-markers t)
+  (add-hook 'org-mode-hook (lambda ()
+			     (setq-local electric-pair-mode nil)))
+
+#+end_src
 
 ** Org-tempo
 
@@ -458,22 +661,32 @@ Also change how tabs work.
 
 #+end_src
 
-** Settings
-
-#+begin_src emacs-lisp
-
-  (electric-indent-mode 0)
-
-#+end_src
-
 * TODO List
 
 ** TODO IDE
 
-- [ ] Add basic LSP functionality
+- [X] Add basic LSP functionality
 - [ ] Add Treesitter
-- [ ] Check why the Python LSP is giving fewer results than Neovim
+- [X] Check why the Python LSP is giving fewer results than Neovim
+      It was the fault of the font lock level.
 
+** TODO Keybinds
+
+*** TODO Evil
+
+- [ ] /Ctrl-U/ normal Vim behaviour
+
+*** TODO Vertico
+
+- [ ] /Ctrl-j/ go down
+- [ ] /Ctrl-k/ go up
+- [ ] /Ctrl-h/ delete path until slash
+- [ ] /Ctrl-l/ select
+
+*** TODO Git
+
+- [ ] /SPC g g/ open Magit  
+  
 ** TODO Org mode
 
 *** TODO modes to check
@@ -481,3 +694,27 @@ Also change how tabs work.
 - [ ] Org-roam
 - [ ] Org-agenda (built-in)
 - [ ] Org-schedule (built-in)
+
+** TODO Additions
+
+- [ ] Flash of yanked region
+- [ ] Center after every screen and half-screen movement
+- [ ] Center after every search jump
+
+** TODO Fixes
+
+- [X] Scrolling
+- [ ] Replace global tsserver and typescript when ts-ls is fixed
+- [ ] Tab should work like everywhere else
+
+** TODO Packages
+
+- [ ] [[https://github.com/dgutov/diff-hl][diff-hl]]
+- [ ] [[https://github.com/emacsmirror/diminish][diminish]]
+- [ ] [[https://github.com/kuanyui/tldr.el][tldr]]
+
+** TODO Move stuff from the config directory to a fixed one  
+
+- [ ] Temporary files
+- [ ] Autosave files
+- [ ] All package files
