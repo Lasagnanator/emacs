@@ -19,6 +19,7 @@
   (setq scroll-margin 4)
   (setq scroll-conservatively 9999)
   (setq enable-recursive-minibuffers t)
+  (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*") ; TODO: change section
 
 #+end_src
 
