@@ -491,6 +491,22 @@
 
 #+end_src
 
+** Highlight motions
+
+#+begin_src emacs-lisp
+
+  (use-package evil-goggles
+    :init
+    (setq evil-goggles-pulse t
+	  evil-goggles-enable-yank t
+	  evil-goggles-enable-undo t
+	  evil-goggles-enable-redo t
+	  evil-goggles-enable-delete nil)
+    :config
+    (evil-goggles-mode))
+
+#+end_src
+
 * Git
 
 ** Magit
