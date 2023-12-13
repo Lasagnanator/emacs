@@ -580,6 +580,35 @@
 
 #+end_src
 
+** To-do highlighting
+
+#+begin_src emacs-lisp
+
+  (use-package hl-todo
+    :config
+    (global-hl-todo-mode))
+
+#+end_src
+
+*** Extra packages
+
+#+begin_src emacs-lisp
+
+  (use-package flycheck-hl-todo
+    :after flycheck
+    :config
+    (flycheck-hl-todo-setup))
+
+  (use-package magit-todos
+    :after magit
+    :config
+    (magit-todos-mode))
+
+  (use-package consult-todo
+    :after consult)
+
+#+end_src
+
 ** LSP
 
 #+begin_src emacs-lisp
