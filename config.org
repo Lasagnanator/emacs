@@ -131,6 +131,7 @@
     (setq evil-undo-system 'undo-redo)
     (setq evil-vsplit-window-right t)
     (setq evil-split-window-below t)
+    (setq evil-want-C-u-scroll t)
     :config
     ; (evil-define-key 'normal 'global (kbd "M-h") 'evil-window-left)
     ; (evil-define-key 'normal 'global (kbd "M-j") 'evil-window-down)
