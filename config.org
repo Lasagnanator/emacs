@@ -626,6 +626,16 @@
 
 #+end_src
 
+** Linting
+
+#+begin_src emacs-lisp
+
+  (use-package flycheck
+    :config
+    (global-flycheck-mode))
+
+#+end_src
+
 ** Languages
 
 *** Rich HTML
