@@ -780,18 +780,18 @@
 
 *** TODO Evil
 
-- [ ] /Ctrl-U/ normal Vim behaviour
+- [X] /Ctrl-U/ normal Vim behaviour
 
 *** TODO Vertico
 
-- [ ] /Ctrl-j/ go down
-- [ ] /Ctrl-k/ go up
+- [X] /Ctrl-j/ go down
+- [X] /Ctrl-k/ go up
 - [ ] /Ctrl-h/ delete path until slash
 - [ ] /Ctrl-l/ select
 
 *** TODO Git
 
-- [ ] /SPC g g/ open Magit  
+- [X] /SPC g g/ open Magit  
   
 ** TODO Org mode
 
@@ -808,7 +808,7 @@
 
 ** TODO Additions
 
-- [ ] Flash of yanked region
+- [X] Flash of yanked region
 - [ ] Center after every screen and half-screen movement
 - [ ] Center after every search jump
 
