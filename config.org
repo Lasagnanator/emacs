@@ -780,6 +780,10 @@
   
 ** TODO Org mode
 
+- [ ] Different font sizes in client
+- [ ] Concealers
+- [ ] Shortcut for emacs-lisp source block
+
 *** TODO modes to check
 
 - [ ] Org-roam
@@ -797,6 +801,7 @@
 - [X] Flash of yanked region
 - [ ] Center after every screen and half-screen movement
 - [ ] Center after every search jump
+- [ ] Bind /CTRL+;/ to /ESC/ in client
 
 ** TODO Fixes
 
