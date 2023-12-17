@@ -743,6 +743,23 @@
 - [ ] Add Treesitter
 - [X] Check why the Python LSP is giving fewer results than Neovim
       It was the fault of the font lock level.
+- [ ] Dap mode for as many languages as possible
+
+*** Languages
+
+- [ ] Bash
+- [ ] Python
+- [ ] Lua
+- [ ] C/C++
+- [ ] Javascript/Typescript
+- [ ] JSON
+- [ ] YAML
+- [ ] Ansible
+- [ ] Go
+- [ ] Rust
+- [ ] Vue (?)
+- [ ] Ruby (?)
+
 
 ** TODO Keybinds
 
@@ -773,6 +790,7 @@
 
 - [ ] Interactive terminal
 - [ ] Workspaces?
+- [ ] Terminal interactions
 
 ** TODO Additions
 
@@ -785,6 +803,7 @@
 - [X] Scrolling
 - [ ] Replace global tsserver and typescript when ts-ls is fixed
 - [ ] Tab should work like everywhere else
+- [X] Icons not showing in client
 
 ** TODO Packages
 
