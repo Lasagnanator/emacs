@@ -628,6 +628,14 @@
 
 #+end_src
 
+** Debugger
+
+#+begin_src emacs-lisp
+
+  (use-package dap-mode)
+
+#+end_src
+
 ** Languages
 
 *** Rich HTML
