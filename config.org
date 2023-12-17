@@ -663,7 +663,8 @@
 
   (use-package flycheck
     :config
-    (global-flycheck-mode))
+    (global-flycheck-mode)
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 #+end_src
 
