@@ -45,7 +45,6 @@
   (electric-indent-mode nil)
   (delete-selection-mode 1)
   (electric-pair-mode 1)
-  (delete-selection-mode t)
 
 #+end_src
 
