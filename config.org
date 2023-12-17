@@ -708,6 +708,14 @@
 
 #+end_src
 
+*** Fish
+
+#+begin_src emacs-lisp
+
+  (use-package fish-mode)
+
+#+end_src
+
 *** Yuck
 
 #+begin_src emacs-lisp
