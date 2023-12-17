@@ -276,50 +276,6 @@
 
 #+end_src
 
-** Ivy completion
-
-*** Ivy
-
-#+begin_src emacs-lisp
-
-  ; (use-package ivy  
-  ;   :config
-  ;   (ivy-mode))
-
-#+end_src
-
-*** Ivy-rich
-
-#+begin_src emacs-lisp
-
-  ; (use-package ivy-rich
-  ;   :init
-  ;   (ivy-rich-mode 1)
-  ;   :config
-  ;   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
-
-#+end_src
-
-*** Swiper
-
-#+begin_src emacs-lisp
-
-  ; (use-package swiper
-  ;   :after ivy)
-
-#+end_src
-
-*** Counsel
-
-#+begin_src emacs-lisp
-
-  ; (use-package counsel
-  ;   :after (ivy swiper)
-  ;   :config
-  ;   (counsel-mode))
-
-#+end_src
-
 ** Helpful
 
 #+begin_src emacs-lisp
