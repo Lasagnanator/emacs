@@ -426,7 +426,7 @@
 #+begin_src emacs-lisp
 
   (add-to-list 'default-frame-alist
-	       '(font . "JetBrains Mono-11"))
+	       '(font . "JetBrains Mono-12"))
 
 #+end_src
 
