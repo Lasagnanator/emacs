@@ -631,9 +631,10 @@
 #+begin_src emacs-lisp
 
   (use-package flycheck
-    :config
+    :init
     (setq flycheck-global-modes '(not org-mode))
     (setq flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+    :config
     (global-flycheck-mode))
 
 #+end_src
