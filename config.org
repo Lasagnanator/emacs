@@ -34,7 +34,8 @@
   (global-display-line-numbers-mode t)
   ;; Disable line numbers for some modes
   (dolist (mode '(term-mode-hook
-		  eshell-mode-hook))
+		  eshell-mode-hook
+		  vterm-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
   (recentf-mode 1)
   (savehist-mode 1)
@@ -337,6 +338,14 @@
   (use-package treemacs-magit
     :after (treemacs magit)
     :ensure t)
+
+#+end_src
+
+** Terminal
+
+#+begin_src emacs-lisp
+
+  (use-package vterm)
 
 #+end_src
 
