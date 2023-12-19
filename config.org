@@ -751,7 +751,7 @@
 ** TODO IDE
 
 - [X] Add basic LSP functionality
-- [ ] Add Treesitter
+- [ ] Add Treesitter (maybe)
 - [X] Check why the Python LSP is giving fewer results than Neovim
       It was the fault of the font lock level.
 - [ ] Dap mode for as many languages as possible
@@ -766,13 +766,21 @@
 - [ ] JSON
 - [ ] YAML
 - [ ] Ansible
+- [ ] Docker
 - [ ] Go
 - [ ] Rust
+- [ ] PHP
 - [ ] Vue (?)
+- [ ] Haskell (?)
 - [ ] Ruby (?)
 
 
 ** TODO Keybinds
+
+*** TODO Common
+
+- [ ] Binds for treemacs
+- [ ] Hydra? At least for windows
 
 *** TODO Evil
 
@@ -805,7 +813,14 @@
 
 - [ ] Interactive terminal
 - [ ] Workspaces?
-- [ ] Terminal interactions
+- [ ] Dashboard
+- [X] Ophints (evil-goggles)
+- [ ] Folds (hideshow)
+- [ ] PDF (pdf-tools)
+- [ ] Web?
+- [ ] File templates (it should be bundled with yasnippet)
+- [ ] Lookup (dictionaries and online search)
+- [ ] Upload (ssh-deploy)
 
 ** TODO Additions
 
@@ -813,6 +828,7 @@
 - [ ] Center after every screen and half-screen movement
 - [ ] Center after every search jump
 - [ ] Bind /CTRL+;/ to /ESC/ in client
+- [ ] Rainbow mode
 
 ** TODO Fixes
 
@@ -820,12 +836,15 @@
 - [ ] Replace global tsserver and typescript when ts-ls is fixed
 - [ ] Tab should work like everywhere else
 - [X] Icons not showing in client
+- [ ] Fixed width gutter and numbers
 
 ** TODO Packages
 
 - [ ] [[https://github.com/dgutov/diff-hl][diff-hl]]
 - [ ] [[https://github.com/emacsmirror/diminish][diminish]]
 - [ ] [[https://github.com/kuanyui/tldr.el][tldr]]
+- [ ] [[https://github.com/vedang/pdf-tools/][pdf-tools]]
+- [ ] [[https://github.com/emacsfodder/kurecolor][kurecolor]]
 
 ** TODO Move stuff from the config directory to a fixed one  
 
