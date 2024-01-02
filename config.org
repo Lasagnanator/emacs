@@ -1,131 +1,37 @@
 #+TITLE: Lasagna's emacs config
 #+AUTHOR: Lasagnanator
 
-* General configuration
+* Base setup
 
-** Variables
+** Path setup
+
+Add to the path the folders from which the additional scripts should be sourced.
 
 #+begin_src emacs-lisp
 
-  (setq inhibit-startup-message t)
-  (setq backup-directory-alist '((".*" . "~/.local/share/Trash/files")))
-  (setq display-line-numbers-type 'visual)
-  (setq history-length 25)
-  (setq custom-file (locate-user-emacs-file "custom-vars.el"))
-  (load custom-file 'noerror 'nomessage)
-  (setq use-dialog-box nil)
-  (setq global-auto-revert-non-file-buffers t) ; For Dired
-  (setq scroll-step 1)
-  (setq scroll-margin 4)
-  (setq scroll-conservatively 9999)
-  (setq enable-recursive-minibuffers t)
-  (setq tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*") ; TODO: change section
+  (add-to-list 'load-path (concat user-emacs-directory "setup-scripts"))
 
 #+end_src
 
-** Modes
+** Package manager
+
+Bootstrap /elpaca/ and set it as default when ~use-package~ is called.
 
 #+begin_src emacs-lisp
-
-  (menu-bar-mode 0)
-  (tool-bar-mode 0)
-  (scroll-bar-mode 0)
-  (column-number-mode)
-  (global-display-line-numbers-mode t)
-  ;; Disable line numbers for some modes
-  (dolist (mode '(term-mode-hook
-		  eshell-mode-hook
-		  vterm-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
-  (recentf-mode 1)
-  (savehist-mode 1)
-  (save-place-mode 1)
-  (global-auto-revert-mode 1)
-  (set-fringe-mode 10)
-  (tooltip-mode 0)
-  (electric-indent-mode nil)
-  (delete-selection-mode 1)
-  (electric-pair-mode 1)
+  
+  (require 'elpaca)
 
 #+end_src
 
-** Keys
+* Evil mode
+
+/No vim, no party./
 
 #+begin_src emacs-lisp
 
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-#+end_src
-
-* Package manager
-
-** Bootstrap
-
-#+begin_src emacs-lisp
-
-  (defvar elpaca-installer-version 0.6)
-  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-				:ref nil
-				:files (:defaults "elpaca-test.el" (:exclude "extensions"))
-				:build (:not elpaca--activate-package)))
-  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-	 (build (expand-file-name "elpaca/" elpaca-builds-directory))
-	 (order (cdr elpaca-order))
-	 (default-directory repo))
-    (add-to-list 'load-path (if (file-exists-p build) build repo))
-    (unless (file-exists-p repo)
-      (make-directory repo t)
-      (when (< emacs-major-version 28) (require 'subr-x))
-      (condition-case-unless-debug err
-	  (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-		   ((zerop (call-process "git" nil buffer t "clone"
-					 (plist-get order :repo) repo)))
-		   ((zerop (call-process "git" nil buffer t "checkout"
-					 (or (plist-get order :ref) "--"))))
-		   (emacs (concat invocation-directory invocation-name))
-		   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-					 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-		   ((require 'elpaca))
-		   ((elpaca-generate-autoloads "elpaca" repo)))
-	      (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-
-	    (error "%s" (with-current-buffer buffer (buffer-string))))
-	((error) (warn "%s" err) (delete-directory repo 'recursive))))
-    (unless (require 'elpaca-autoloads nil t)
-      (require 'elpaca)
-      (elpaca-generate-autoloads "elpaca" repo)
-      (load "./elpaca-autoloads")))
-  (add-hook 'after-init-hook #'elpaca-process-queues)
-  (elpaca `(,@elpaca-order))
-
-#+end_src
-
-** Use-package
-
-#+begin_src emacs-lisp
-
-  ;; Install use-package support
-  (elpaca elpaca-use-package
-    ;; Enable :elpaca use-package keyword.
-    (elpaca-use-package-mode)
-    ;; Assume :elpaca t unless otherwise specified.
-    (setq elpaca-use-package-by-default t))
-  ;; Block until current queue processed.
-  (elpaca-wait)
-
-#+end_src
-
-* Utilities
-
-** Evil mode
-
-#+begin_src emacs-lisp
-
+  ;; (require 'evil)
   (use-package evil
-    :init ; tweak evil's configuration before loading it
+    :init			; tweak evil's configuration before loading it
     (setq evil-want-integration t) ; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
     (setq evil-undo-system 'undo-redo)
@@ -133,219 +39,13 @@
     (setq evil-split-window-below t)
     (setq evil-want-C-u-scroll t)
     :config
-    ; (evil-define-key 'normal 'global (kbd "M-h") 'evil-window-left)
-    ; (evil-define-key 'normal 'global (kbd "M-j") 'evil-window-down)
-    ; (evil-define-key 'normal 'global (kbd "M-k") 'evil-window-up)
-    ; (evil-define-key 'normal 'global (kbd "M-l") 'evil-window-right)
-   (evil-mode))
+    (evil-mode))
   (use-package evil-collection
     :after evil
     :config
-    ; (setq evil-collection-mode-list '(dashboard dired ibuffer magit)) ; if I want to set evil binds for only some modes
+					  ; (setq evil-collection-mode-list '(dashboard dired ibuffer magit)) ; if I want to set evil binds for only some modes
     (evil-collection-init))
   (use-package evil-tutor)
-
-#+end_src
-
-** General
-
-#+begin_src emacs-lisp
-
-  (use-package general
-    :config
-    (general-evil-setup)
-    (general-create-definer leader-keys
-      :states '(normal insert visual emacs)
-      :keymaps 'override
-      :prefix "SPC"			; set leader
-      :global-prefix "M-SPC")		; access leader in insert mode
-
-    ;; Buffer
-    (leader-keys
-      "b" '(:ignore t :wk "Buffer")
-      "b d" '(kill-this-buffer :wk "Kill this buffer")
-      "b r" '(revert-buffer :wk "Reload buffer")
-      "b i" '(ibuffer :wk "Open ibuffer")
-      "b s" '(basic-save-buffer :wk "Save buffer")
-      "b S" '(evil-write-all :wk "Save all buffers"))
-
-    ;; Windows
-    (leader-keys
-      "w" '(:ignore t :wk "Window")
-      "w q" '(evil-quit :wk "Quit window"))
-
-    ;; Files and folders
-    (leader-keys
-      "f" '(:ignore t :wk "Files")
-      "f f" '(find-file :wk "Find file")
-      "f r" '(recentf :wk "Recent files"))
-
-    ;; Sessions
-    (leader-keys
-      "q" '(:ignore t :wk "Session")
-      "q q" '(save-buffers-kill-terminal :wk))
-
-    ;; Tabs and workspaces
-    (leader-keys
-      "TAB" '(:ignore t :wk "Tabs"))
-
-    ;; Help and other functions
-    (leader-keys
-      "h" '(:ignore t :wk "H")
-      "h t" '(load-theme :wk "Load theme"))
-
-    ;; Git
-    (leader-keys
-      "g" '(:ignore t :wk Git)
-      "g g" '(magit :wk "Magit")))
-
-#+end_src
-
-** Which-key
-
-#+begin_src emacs-lisp
-
-  (use-package which-key
-    :config
-    (which-key-mode))
-
-#+end_src
-
-** Pickers
-
-*** Vertico
-
-#+begin_src emacs-lisp
-
-  (use-package vertico
-    :init
-    (vertico-mode)
-    (savehist-mode)
-    (setq vertico-scroll-margin 2)
-    (setq vertico-count 15)
-    (setq vertico-resize nil)
-    :bind
-    (:map vertico-map
-	  ("C-j" . vertico-next)
-	  ("C-k" . vertico-previous)
-	  ("DEL" . vertico-directory-delete-char)))
-
-#+end_src
-
-*** Consult
-
-#+begin_src emacs-lisp
-
-  (use-package consult
-    :hook (completion-list-mode . consult-preview-at-point-mode)
-    :init
-    (setq register-preview-delay 0.5
-	  register-preview-function #'consult-register-format)
-    (advice-add #'register-preview :override #'consult-register-window)
-    :config
-    (setq consult-narrow-key "<"))
-
-#+end_src
-
-*** Orderless
-
-#+begin_src emacs-lisp
-
-  (use-package orderless
-    :init
-    ;; Configure a custom style dispatcher (see the Consult wiki)
-    ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
-    ;;       orderless-component-separator #'orderless-escapable-split-on-space)
-    (setq completion-styles '(orderless basic)
-	  completion-category-defaults nil
-	  completion-category-overrides '((file (styles partial-completion)))))
-
-#+end_src
-
-*** Marginalia
-
-#+begin_src emacs-lisp
-
-  (use-package marginalia
-    ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
-    ;; available in the *Completions* buffer, add it to the
-    ;; `completion-list-mode-map'.
-    :bind (:map minibuffer-local-map
-	   ("M-A" . marginalia-cycle))
-    :init
-    (marginalia-mode))
-
-#+end_src
-
-** Helpful
-
-#+begin_src emacs-lisp
-
-  (use-package helpful
-    :config
-    (global-set-key (kbd "C-h f") #'helpful-callable)
-    (global-set-key (kbd "C-h v") #'helpful-variable)
-    (global-set-key (kbd "C-h k") #'helpful-key)
-    (global-set-key (kbd "C-h x") #'helpful-command)
-    (global-set-key (kbd "C-c C-d") #'helpful-at-point)
-    (global-set-key (kbd "C-h F") #'helpful-function))
-
-#+end_src
-
-** Treemacs
-
-#+begin_src emacs-lisp
-
-(use-package treemacs
-  :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-  :config
-  (treemacs-follow-mode t)
-  (treemacs-filewatch-mode t)
-  (treemacs-fringe-indicator-mode 'always)
-  (when treemacs-python-executable
-    (treemacs-git-commit-diff-mode t))
-  (pcase (cons (not (null (executable-find "git")))
-               (not (null treemacs-python-executable)))
-    (`(t . t)
-     (treemacs-git-mode 'deferred))
-    (`(t . _)
-     (treemacs-git-mode 'simple)))
-
-  (treemacs-hide-gitignored-files-mode nil))
-
-#+end_src
-
-*** Additional packages
-
-#+begin_src emacs-lisp
-
-  (use-package treemacs-evil
-    :after (treemacs evil)
-    :ensure t)
-
-  (use-package treemacs-projectile
-    :after (treemacs projectile)
-    :ensure t)
-
-  (use-package treemacs-icons-dired
-    :hook (dired-mode . treemacs-icons-dired-enable-once)
-    :ensure t)
-
-  (use-package treemacs-magit
-    :after (treemacs magit)
-    :ensure t)
-
-#+end_src
-
-** Terminal
-
-#+begin_src emacs-lisp
-
-  (use-package vterm)
 
 #+end_src
 
@@ -369,29 +69,202 @@
 
 #+end_src
 
-** Sudo-edit
+* Configuration
+
+General Emacs variables.
+
+** Settings
+
+**** TODO check all the settings applied here and evaluate them
 
 #+begin_src emacs-lisp
 
-  (use-package sudo-edit)
+  ;; Variables
+
+  (setq inhibit-startup-message t
+	backup-directory-alist '((".*" . "~/.local/share/Trash/files"))
+	display-line-numbers-type 'visual
+	history-length 25
+	use-dialog-box nil
+	global-auto-revert-non-file-buffers t ; For Dired
+	scroll-step 1
+	scroll-margin 4
+	scroll-conservatively 9999
+	enable-recursive-minibuffers t
+	tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*") ; TODO: change section
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  ;; (setq custom-file (locate-user-emacs-file "custom-vars.el"))
+  ;; (load custom-file 'noerror 'nomessage)
+
+  ;; Modes
+
+  (menu-bar-mode 0)
+  (tool-bar-mode 0)
+  (scroll-bar-mode 0)
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+  (recentf-mode 1)
+  (savehist-mode 1)
+  (save-place-mode 1)
+  (global-auto-revert-mode 1)
+  (set-fringe-mode 10)
+  (tooltip-mode 0)
+  (delete-selection-mode 1)
+  (electric-indent-mode 0)
+  (electric-pair-mode 1)
+
+  ;; Disable line numbers for some modes
+  (dolist (mode '(term-mode-hook
+		  eshell-mode-hook
+		  vterm-mode-hook
+		  treemacs-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 #+end_src
 
-* Interface
+* Keybinds
+
+** Custom keys
+
+#+begin_src emacs-lisp
+
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  (define-key key-translation-map ["C-;"] (kbd "<escape>"))
+
+#+end_src
+
+** General
+
+#+begin_src emacs-lisp
+
+  (use-package general
+    :config
+    (general-evil-setup)
+    (general-create-definer leader-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "SPC"			; set leader
+      :global-prefix "M-SPC")		; access leader in insert mode
+
+    (general-create-definer next-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "]"			; set leader
+      :global-prefix "M-]")		; access leader in insert mode
+
+    (general-create-definer prev-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "["			; set leader
+      :global-prefix "M-[")		; access leader in insert mode
+
+    ;; Buffer
+    (leader-keys
+      "b" '(:ignore t :wk "Buffer")
+      "b d" '(kill-this-buffer :wk "Kill this buffer")
+      "b b" '(consult-buffer :wk "Open buffers list")
+      "b r" '(revert-buffer :wk "Reload buffer")
+      "b i" '(ibuffer :wk "Open ibuffer")
+      "b s" '(basic-save-buffer :wk "Save buffer")
+      "b S" '(evil-write-all :wk "Save all buffers"))
+    (next-keys "b" '(next-buffer :wk "Next buffer"))
+    (prev-keys "b" '(previous-buffer :wk "Previous buffer"))
+
+    ;; Windows
+    (leader-keys
+      "w" '(:ignore t :wk "Window")
+      "w q" '(evil-quit :wk "Quit window"))
+
+    ;; Files and folders
+    (leader-keys
+      "f" '(:ignore t :wk "Files")
+      "f f" '(find-file :wk "Find file")
+      "f r" '(recentf :wk "Recent files")
+      "f -" '(dired-jump :wk "Open dired in cwd"))
+
+    ;; Sessions
+    (leader-keys
+      "q" '(:ignore t :wk "Session")
+      "q q" '(save-buffers-kill-terminal :wk))
+
+    ;; Tabs and workspaces
+    (leader-keys
+      "TAB" '(:ignore t :wk "Tabs")
+      "TAB l" '(persp-switch :wk "Choose workspace")
+      "TAB n" '(persp-switch :wk "Choose workspace"))
+    (next-keys "TAB" '(persp-next :wk "Next workspace"))
+    (prev-keys "TAB" '(persp-prev :wk "Previous workspace"))
+
+    (leader-keys
+      "o" '(:ignore t :wk "Open")
+      "o e" '(treemacs :wk "Open Treemacs"))
+
+    ;; Help and other functions
+    (leader-keys
+      "h" '(:ignore t :wk "H")
+      "h t" '(consult-theme :wk "Load theme"))
+
+    ;; Git
+    (leader-keys
+      "g" '(:ignore t :wk Git)
+      "g g" '(magit :wk "Magit")))
+
+#+end_src
+
+** Which-key
+
+#+begin_src emacs-lisp
+
+  (use-package which-key
+    :config
+    (which-key-mode))
+
+#+end_src
+
+* Interface and eye-candy
 
 ** Themes
 
-*** Doom themes megapack
+The theme to load at startup.
+
+#+begin_src emacs-lisp
+
+  (add-hook 'emacs-startup-hook
+	    (lambda ()
+	      (load-theme 'doom-palenight t)))
+
+#+end_src
+
+*** Doom themes
+
+Themes from the Doom distro. Probably the themes that are closer to Neovim's ones.
+Nice themes to consider:
+- doom-challenger-deep
+- doom-dracula
+- doom-fairy-floss
+- doom-gruvbox
+- doom-henna
+- doom-horizon
+- doom-lantern
+- doom-laserwave
+- doom-moonlight
+- doom-nord-aurora
+- doom-oceanic-next
+- doom-outrun-electric
+- doom-palenight
+- doom-shades-of-purple
+- doom-solarized-dark
+- doom-tokyo-night
+- doom-vibrant
+
+**** TODO expand on the list of useful themes
 
 #+begin_src emacs-lisp
 
   (use-package doom-themes
-    :ensure t
     :config
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-	  doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    (load-theme 'doom-dracula t)
-
+    (setq doom-themes-enable-bold t
+	  doom-themes-enable-italic t)
     (doom-themes-visual-bell-config)
     (setq doom-themes-treemacs-theme "doom-colors")
     (doom-themes-treemacs-config)
@@ -401,27 +274,18 @@
 
 *** Catppuccin
 
+Best theme, but with too little syntax highlighting.
+
 #+begin_src emacs-lisp
 
   (use-package catppuccin-theme
-    :init (setq catppuccin-flavour 'mocha)
-    ; :config
-    ; (load-theme 'catppuccin t)
-    )
-
-#+end_src
-
-*** Dracula
-
-#+begin_src emacs-lisp
-
-  (use-package dracula-theme)
-    ;:config
-    ;(load-theme 'dracula t))
+    :init (setq catppuccin-flavour 'mocha))
 
 #+end_src
 
 ** Fonts
+
+Fonts for the graphical client.
 
 #+begin_src emacs-lisp
 
@@ -435,13 +299,15 @@
 #+begin_src emacs-lisp
 
   (use-package doom-modeline
-    :ensure t
     :init (doom-modeline-mode 1)
     :custom ((doom-modeline-height 15)))
 
 #+end_src
 
 ** Icons
+
+Package containing icons for the graphical client.
+It still needs to be installed with commands on a fresh clone.
 
 #+begin_src emacs-lisp
 
@@ -450,7 +316,9 @@
 
 #+end_src
 
-** Dired customizations
+** Colorful Dired
+
+Add colors to the builtin file manager.
 
 #+begin_src emacs-lisp
 
@@ -462,7 +330,7 @@
 
 #+end_src
 
-** Highlight motions
+** Highlight Vim motions
 
 #+begin_src emacs-lisp
 
@@ -478,9 +346,160 @@
 
 #+end_src
 
+* Additional functions
+
+Add functionality to Emacs for a better writing experience.
+
+** Vertico
+
+Modern completion UI.
+
+#+begin_src emacs-lisp
+
+  (use-package vertico
+    :init
+    (vertico-mode)
+    (savehist-mode)
+    (setq vertico-scroll-margin 2)
+    (setq vertico-count 15)
+    (setq vertico-resize nil)
+    :bind
+    (:map vertico-map
+	  ("C-j" . vertico-next)
+	  ("C-k" . vertico-previous)
+	  ("C-h" . vertico-directory-up)
+	  ("DEL" . vertico-directory-delete-char)))
+
+#+end_src
+
+*** Orderless
+
+Completion style that searches for unordered combinations of words, separated by spaces.
+
+#+begin_src emacs-lisp
+
+  (use-package orderless
+    :init
+    ;; Configure a custom style dispatcher (see the Consult wiki)
+    (setq completion-styles '(orderless basic)
+	  completion-category-defaults nil
+	  completion-category-overrides '((file (styles partial-completion)))))
+
+#+end_src
+
+*** Marginalia
+
+Add marks and annotations to search results in minibuffer and completion.
+
+#+begin_src emacs-lisp
+
+  (use-package marginalia
+    :bind (:map minibuffer-local-map
+	   ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
+
+#+end_src
+
+** Consult
+
+Enhanced search and navigation commands. Substitutes functions like /buffers/ and /imenu/.
+
+#+begin_src emacs-lisp
+
+  (use-package consult
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+    :init
+    (setq register-preview-delay 0.5
+	  register-preview-function #'consult-register-format)
+    (advice-add #'register-preview :override #'consult-register-window)
+    :config
+    ;; (add-to-list 'consult-buffer-sources 'persp-consult-source)
+    (setq consult-narrow-key "<"))
+
+#+end_src
+
+** Helpful
+
+Better help commands.
+
+#+begin_src emacs-lisp
+
+  (use-package helpful
+    :config
+    (global-set-key (kbd "C-h f") #'helpful-callable)
+    (global-set-key (kbd "C-h v") #'helpful-variable)
+    (global-set-key (kbd "C-h k") #'helpful-key)
+    (global-set-key (kbd "C-h x") #'helpful-command)
+    (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+    (global-set-key (kbd "C-h F") #'helpful-function))
+
+#+end_src
+
+** Treemacs
+
+Add tree-style views to Emacs.
+
+#+begin_src emacs-lisp
+
+  (use-package treemacs
+    :defer t
+    :init
+    (with-eval-after-load 'winum
+      (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+    :config
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode 'always)
+    (when treemacs-python-executable
+      (treemacs-git-commit-diff-mode t))
+    (pcase (cons (not (null (executable-find "git")))
+		 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple)))
+    (treemacs-hide-gitignored-files-mode nil))
+
+#+end_src
+
+*** Integrations
+
+#+begin_src emacs-lisp
+
+  (use-package treemacs-evil
+    :after (treemacs evil))
+  (use-package treemacs-projectile
+    :after (treemacs projectile))
+  (use-package treemacs-icons-dired
+    :hook (dired-mode . treemacs-icons-dired-enable-once))
+  (use-package treemacs-magit
+    :after (treemacs magit))
+
+#+end_src
+
+** Terminal emulator
+
+#+begin_src emacs-lisp
+
+  (when (display-graphic-p)
+      (use-package vterm))
+
+#+end_src
+
+** Sudo-edit
+
+#+begin_src emacs-lisp
+
+  (use-package sudo-edit)
+
+#+end_src
+
 * Git
 
 ** Magit
+
+Git interface for managing repositories as a text buffer.
 
 #+begin_src emacs-lisp
 
@@ -493,6 +512,8 @@
 
 ** Forge
 
+Magit integration with services like GitHub and GitLab.
+
 #+begin_src emacs-lisp
 
   (use-package forge)
@@ -500,6 +521,8 @@
 #+end_src
 
 ** Projectile
+
+Project managemet.
 
 #+begin_src emacs-lisp
 
@@ -509,28 +532,13 @@
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :init
-    (when (file-directory-p "~/Projects/Code")
-      (setq projectile-project-search-path '("~/Projects/Code")))
     (setq projectile-switch-project-action #'projectile-dired))
 
 #+end_src
 
-*** Counsel-projectile
+* IDE and development
 
-#+begin_src emacs-lisp
-
-  (use-package counsel-projectile
-    :after (counsel projectile)
-    :config
-    (counsel-projectile-mode))
-
-#+end_src
-
-* IDE
-
-** Highlighting
-
-*** Tree-sitter
+** Tree-sitter
 
 #+begin_src emacs-lisp
 
@@ -541,17 +549,9 @@
 
 #+end_src
 
-*** Treesit-auto
-
-#+begin_src emacs-lisp
-
-  (use-package treesit-auto
-    :config
-    (global-treesit-auto-mode))
-
-#+end_src
-
 ** To-do highlighting
+
+**** TODO Add more highlighted words
 
 #+begin_src emacs-lisp
 
@@ -561,7 +561,7 @@
 
 #+end_src
 
-*** Extra packages
+*** To-do highlighting integration
 
 #+begin_src emacs-lisp
 
@@ -569,41 +569,55 @@
     :after flycheck
     :config
     (flycheck-hl-todo-setup))
-
   (use-package magit-todos
     :after magit
     :config
     (magit-todos-mode))
-
   (use-package consult-todo
     :after consult)
 
 #+end_src
 
-** LSP
+** Language Server Protocol
+
+Integration with LSP.
 
 #+begin_src emacs-lisp
 
   (use-package lsp-mode
-    :hook ((lsp-mode . lsp-enable-which-key-integration))
+    :hook ((prog-mode . lsp)
+	   (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp)
 
 #+end_src
 
-*** Optional packages
+*** LSP UI
+
+Integration of ~lsp-mode~ with UI elements like Flycheck and code lenses.
+Provides side line diagnostic, peek, docstrings and menu.
 
 #+begin_src emacs-lisp
 
   (use-package lsp-ui 
     :commands lsp-ui-mode)
-  ; (use-package lsp-ivy
-  ;   :commands lsp-ivy-workspace-symbol)
   ; (use-package lsp-treemacs
   ;   :commands lsp-treemacs-errors-list)
 
 #+end_src
 
-** Completion
+** Debug Adapter Protocol
+
+Integraton with DAP.
+
+#+begin_src emacs-lisp
+
+  (use-package dap-mode)
+
+#+end_src
+
+** Company
+
+A completion framework with multiple backends.
 
 #+begin_src emacs-lisp
 
@@ -618,7 +632,9 @@
 
 #+end_src
 
-** Snippets
+** Yasnippet
+
+Snippet engine for multiple languages.
 
 #+begin_src emacs-lisp
 
@@ -626,7 +642,9 @@
 
 #+end_src
 
-** Linting
+** Flycheck
+
+Linter interface for marking errors and code suggestions inside the editor.
 
 #+begin_src emacs-lisp
 
@@ -639,17 +657,11 @@
 
 #+end_src
 
-** Debugger
-
-#+begin_src emacs-lisp
-
-  (use-package dap-mode)
-
-#+end_src
-
 ** Languages
 
-*** Rich HTML
+Specific modes, configurations and packages for single languages.
+
+*** HTML and templating
 
 #+begin_src emacs-lisp
 
@@ -671,8 +683,7 @@
 #+begin_src emacs-lisp
 
   (use-package lsp-pyright
-    :ensure t
-    :hook (python-ts-mode . (lambda ()
+    :hook (python-mode . (lambda ()
 			     (require 'lsp-pyright)
 			     (lsp))))  ; or lsp-deferred
 
@@ -683,15 +694,8 @@
 #+begin_src emacs-lisp
 
   (use-package rjsx-mode
-    :hook (js-ts-mode))
-
-#+end_src
-
-*** Fish
-
-#+begin_src emacs-lisp
-
-  (use-package fish-mode)
+    :hook (js-mode)
+    :config (lsp))
 
 #+end_src
 
@@ -743,5 +747,41 @@
 #+begin_src emacs-lisp
 
   (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist
+	       '("sl" . "src emacs-lisp"))
+
+#+end_src
+
+* Terminal Emacs settings
+
+** Enable mouse integration
+
+#+begin_src emacs-lisp
+
+  (unless (display-graphic-p)
+    (gpm-mouse-mode 1)
+    (xterm-mouse-mode 1))
+
+#+end_src
+
+** Change cursor based on Evil's current state
+
+#+begin_src emacs-lisp
+
+  (unless (display-graphic-p)
+    (use-package evil-terminal-cursor-changer
+      :config
+      (evil-terminal-cursor-changer-activate)))
+
+#+end_src
+
+** Use /term/ instead of /vterm/
+
+Since /vterm/ only works inside graphical Emacs, enable another emulator if it is launched with -nw.
+
+#+begin_src emacs-lisp
+
+  (unless (display-graphic-p)
+    (use-package term))
 
 #+end_src

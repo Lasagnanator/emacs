@@ -1,6 +1,18 @@
 #+TITLE: Management of the emacs project
 #+AUTHOR: Lasagnanator
 
+* Observations
+
+** Unclear behaviours and functions
+
+Electric indent is a mistery.
+Still a mistery why I can't bind /CTRL-;/ to the same function as /ESC/, maybe I should bind it directly to /ESC/.
+
+** Packages I like
+
+Projectile seems like a really good package, but I find its integration with treemacs chaotic.
+It needs some polish.
+
 * TODO List [0/8]
 
 ** TODO IDE [2/4]
@@ -8,7 +20,7 @@
 - [X] Add basic LSP functionality
 - [ ] Add Treesitter (maybe)
 - [X] Check why the Python LSP is giving fewer results than Neovim
-      It was the fault of the font lock level.
+  It was the fault of the font lock level.
 - [ ] Dap mode for as many languages as possible
 
 *** Languages [0/15]
@@ -31,30 +43,37 @@
 
 ** TODO Keybinds [0/4]
 
-*** TODO Common [0/3]
+*** TODO Common [1/3]
 
 - [ ] Binds for treemacs
 - [ ] Hydra? At least for windows
-- [ ] /Ctrl-;/ as /ESC/
+- [X] /Ctrl-;/ as /ESC/
 
 *** TODO Evil [1/1]
 
 - [X] /Ctrl-U/ normal Vim behaviour
 
-*** TODO Buffer [/]
+*** TODO Buffer [0/1]
 
 - [ ] ibuffer workspace
 
-*** TODO Vertico [2/4]
+*** TODO Vertico [3/4]
 
 - [X] /Ctrl-j/ go down
 - [X] /Ctrl-k/ go up
-- [ ] /Ctrl-h/ delete path until slash
+- [X] /Ctrl-h/ delete path until slash
 - [ ] /Ctrl-l/ select
 
 *** TODO Git [1/1]
 
 - [X] /SPC g g/ open Magit  
+
+*** TODO Org [0/4]
+
+- [ ] Toggle TODO state
+- [ ] Toggle tasks state
+- [ ] Roam-related
+- [ ] Agenda-related
   
 ** TODO Org mode [0/4]
 
@@ -63,7 +82,7 @@
 - [ ] Auto indentation
 - [ ] Shortcut for emacs-lisp source block
 
-*** TODO modes to check [0/3]
+*** TODO Modes to check [0/3]
 
 - [ ] Org-roam
 - [ ] Org-agenda (built-in)
@@ -75,25 +94,38 @@
 
 *** TODO Confirmed [1/9]
 
-    - [ ] Interactive terminal
-    - [ ] Workspaces
-    - [ ] Dashboard
-    - [X] Ophints (evil-goggles)
-    - [ ] Folds (hideshow)
-    - [ ] PDF (pdf-tools)
-    - [ ] File templates (it should be bundled with yasnippet)
-    - [ ] Lookup (dictionaries and online search)
-    - [ ] Upload (ssh-deploy)
+- [ ] Interactive elements in terminal
+- [-] Workspaces
+- [ ] Dashboard
+- [X] Ophints (evil-goggles)
+- [ ] Folds (hideshow)
+- [ ] PDF (pdf-tools)
+- [ ] File templates (it should be bundled with yasnippet)
+- [ ] Lookup (dictionaries and online search)
+- [ ] Upload (ssh-deploy)
 
 *** TODO Evaluating [0/5]
 
-    - [ ] Web
-    - [ ] Word-wrap
-    - [ ] Direnv
-    - [ ] Password-keeper
-    - [ ] Taskrunner
+- [ ] Web
+- [ ] Word-wrap
+- [ ] Direnv
+- [ ] Password-keeper
+- [ ] Taskrunner
 
-** TODO Additions [1/9]
+
+** TODO Treemacs [1/5]
+
+- [ ] Make leader work inside treemacs buffer
+- [X] Remove numbers
+- [ ] Enable icons in terminal
+- [ ] Understand what projects do and if treemacs interacts with other packages
+- [ ] Better project management
+
+** TODO Projectile [0/1]
+
+- [ ] Understand how projectile works and how it manages its projects
+
+** TODO Additions [2/9]
 
 - [X] Flash of yanked region
 - [ ] Center after every screen and half-screen movement
@@ -102,19 +134,20 @@
 - [ ] Rainbow mode
 - [ ] Highlight tabs in code
 - [ ] Preview of last search with /
-- [ ] Highlight what is being changed with /:s/
+- [X] Highlight what is being changed with /:s/
 - [ ] Highlight result of /f/ and /t/ keys
 
-** TODO Fixes [2/5]
+** TODO Fixes [2/7]
 
 - [X] Scrolling
 - [ ] Replace global tsserver and typescript when ts-ls is fixed
-- [ ] Tab should work like everywhere else
+- [ ] /Tab/ should work like everywhere else
 - [X] Icons not showing in client
 - [ ] Fixed width gutter and numbers
 - [ ] Always use spaces instead of tabs
+- [ ] Nerd icons and Material icons not showing in buffer while editing (/ie ags/config.js)/
 
-** TODO Packages [0/11]
+** TODO Packages [0/12]
 
 - [ ] [[https://github.com/dgutov/diff-hl][diff-hl]]
 - [ ] [[https://github.com/emacsmirror/diminish][diminish]]
@@ -127,6 +160,7 @@
 - [ ] [[https://github.com/clemera/objed][objed]]
 - [ ] [[https://github.com/tumashu/posframe][postframe]] (flycheck)
 - [ ] [[https://github.com/auto-complete/popup-el][popup]] (flycheck)
+- [ ] [[https://github.com/oantolin/embark][embark]] (vertico)
 
 ** TODO Move stuff from the config directory to a fixed one [0/3]
 
