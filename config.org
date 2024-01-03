@@ -49,26 +49,6 @@ Bootstrap /elpaca/ and set it as default when ~use-package~ is called.
 
 #+end_src
 
-** Evil-surround
-
-#+begin_src emacs-lisp
-
-  (use-package evil-surround
-    :config
-    (global-evil-surround-mode 1))
-
-#+end_src
-
-** Commentary
-
-#+begin_src emacs-lisp
-
-  (use-package evil-commentary
-    :config
-    (evil-commentary-mode))
-
-#+end_src
-
 * Configuration
 
 General Emacs variables.
@@ -218,6 +198,26 @@ General Emacs variables.
   (use-package which-key
     :config
     (which-key-mode))
+
+#+end_src
+
+** Evil-surround
+
+#+begin_src emacs-lisp
+
+  (use-package evil-surround
+    :config
+    (global-evil-surround-mode 1))
+
+#+end_src
+
+** Commentary
+
+#+begin_src emacs-lisp
+
+  (use-package evil-commentary
+    :config
+    (evil-commentary-mode))
 
 #+end_src
 
