@@ -792,8 +792,9 @@ Specific modes, configurations and packages for single languages.
 #+begin_src emacs-lisp
 
   (unless (display-graphic-p)
-    (gpm-mouse-mode 1)
-    (xterm-mouse-mode 1))
+    (xterm-mouse-mode 1)
+    ;; (gpm-mouse-mode 1)
+    )
 
 #+end_src
 
