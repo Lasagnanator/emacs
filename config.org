@@ -703,6 +703,35 @@ Specific modes, configurations and packages for single languages.
 
 #+end_src
 
+*** YAML
+
+#+begin_src emacs-lisp
+
+  (use-package yaml-mode
+    :config (lsp))
+
+#+end_src
+
+*** Ansible
+
+#+begin_src emacs-lisp
+
+  (use-package ansible
+    :config (lsp))
+  (use-package ansible-vault)
+
+#+end_src
+
+*** Docker
+
+#+begin_src emacs-lisp
+
+  (use-package docker)
+  (use-package dockerfile-mode)
+  (use-package docker-compose-mode)
+
+#+end_src
+
 *** Yuck
 
 #+begin_src emacs-lisp
