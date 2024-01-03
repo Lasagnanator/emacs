@@ -112,7 +112,6 @@ It needs some polish.
 - [ ] Password-keeper
 - [ ] Taskrunner
 
-
 ** TODO Treemacs [1/5]
 
 - [ ] Make leader work inside treemacs buffer
@@ -125,7 +124,7 @@ It needs some polish.
 
 - [ ] Understand how projectile works and how it manages its projects
 
-** TODO Additions [2/9]
+** TODO Additions [2/10]
 
 - [X] Flash of yanked region
 - [ ] Center after every screen and half-screen movement
@@ -136,6 +135,7 @@ It needs some polish.
 - [ ] Preview of last search with /
 - [X] Highlight what is being changed with /:s/
 - [ ] Highlight result of /f/ and /t/ keys
+- [ ] Hydra for movement between windows
 
 ** TODO Fixes [2/7]
 
