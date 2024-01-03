@@ -786,6 +786,6 @@ Since /vterm/ only works inside graphical Emacs, enable another emulator if it i
 #+begin_src emacs-lisp
 
   (unless (display-graphic-p)
-    (use-package term))
+    (use-package multi-term)) ;; TODO: probably to change with eshell
 
 #+end_src
