@@ -186,8 +186,12 @@ General Emacs variables.
 
     ;; Git
     (leader-keys
-      "g" '(:ignore t :wk Git)
-      "g g" '(magit :wk "Magit")))
+      "g" '(:ignore t :wk "Git")
+      "g g" '(magit :wk "Magit"))
+
+    ;; Modes
+    (leader-keys
+      "m" '(:ignore t :wk "Mode-specific")))
 
 #+end_src
 
