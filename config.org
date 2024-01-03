@@ -60,7 +60,6 @@ General Emacs variables.
 #+begin_src emacs-lisp
 
   ;; Variables
-
   (setq inhibit-startup-message t
 	backup-directory-alist '((".*" . "~/.local/share/Trash/files"))
 	display-line-numbers-type 'visual
@@ -73,11 +72,8 @@ General Emacs variables.
 	enable-recursive-minibuffers t
 	tramp-shell-prompt-pattern "\\(?:^\\|\r\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*") ; TODO: change section
   (defalias 'yes-or-no-p 'y-or-n-p)
-  ;; (setq custom-file (locate-user-emacs-file "custom-vars.el"))
-  ;; (load custom-file 'noerror 'nomessage)
 
   ;; Modes
-
   (menu-bar-mode 0)
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
