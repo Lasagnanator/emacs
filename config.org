@@ -93,6 +93,10 @@ General Emacs variables.
   (electric-indent-mode 0)
   (electric-pair-mode 1)
 
+  ;; Set custom file
+  (setq custom-file (locate-user-emacs-file "custom-vars.el"))
+  (load custom-file 'noerror 'nomessage)
+
   ;; Disable line numbers for some modes
   (dolist (mode '(term-mode-hook
 		  eshell-mode-hook
