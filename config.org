@@ -765,6 +765,44 @@ Specific modes, configurations and packages for single languages.
 
 *** Emacs Lisp
 
+**** Elisp-def
+
+Probably useless for me.
+
+#+begin_src emacs-lisp
+
+  (use-package elisp-def
+    :hook emacs-lisp-mode-hook)
+
+#+end_src
+
+**** Additional syntax highlighting
+
+#+begin_src emacs-lisp
+
+  (use-package lisp-extra-font-lock
+    :config (lisp-extra-font-lock-global-mode 1))
+
+#+end_src
+
+**** Highlight quoted
+
+#+begin_src emacs-lisp
+
+  (use-package highlight-quoted
+    :hook (emacs-lisp-mode-hook . highlight-quoted-mode))
+
+#+end_src
+
+**** Highlight function calls
+
+#+begin_src emacs-lisp
+
+  (use-package highlight-function-calls
+    :hook (emacs-lisp-mode-hook . highlight-function-calls-mode))
+
+#+end_src
+
 **** Lispyville
 
 #+begin_src emacs-lisp
