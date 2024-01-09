@@ -10,9 +10,13 @@ url/
 
 # Files
 *.*~
+.dap-breakpoints
 config.el
+custom-vars.el
 forge*
 history
 .lsp-session*
 places
+projectile-bookmarks.eld
+projects
 recentf
