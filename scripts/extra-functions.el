@@ -1,0 +1,17 @@
+(defun +split-no-follow ()
+  (interactive)
+  (let ((evil-split-window-below (not evil-split-window-below)))
+    (call-interactively #'evil-window-split)))
+
+(defun +vsplit-no-follow ()
+  (interactive)
+  (let ((evil-vsplit-window-right (not evil-vsplit-window-right)))
+    (call-interactively #'evil-window-vsplit)))
+
+(defun +lsp-manage ()
+  (interactive)
+  (if (bound-and-true-p lsp-mode)
+      ((message "Restarting LSP...")
+       (lsp-restart-workspace))
+    ((message "Starting LSP...")
+     (lsp))))
