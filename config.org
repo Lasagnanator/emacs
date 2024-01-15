@@ -9,7 +9,7 @@ Add to the path the folders from which the additional scripts should be sourced.
 
 #+begin_src emacs-lisp
 
-  (add-to-list 'load-path (concat user-emacs-directory "scripts"))
+  (add-to-list 'load-path (concat user-emacs-directory "core"))
 
 #+end_src
 
