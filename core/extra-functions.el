@@ -15,3 +15,6 @@
        (lsp-restart-workspace))
     ((message "Starting LSP...")
      (lsp))))
+
+(defun +lang-active (language)
+  (cdr (assoc language configured-languages)))
