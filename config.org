@@ -756,7 +756,8 @@ Probably useless for me.
 
   (setq org-hide-emphasis-markers t)
   (add-hook 'org-mode-hook (lambda ()
-			     (setq-local electric-pair-mode nil)))
+                             (setq-local electric-pair-mode nil)))
+  (setq org-agenda-files '("~/org/roam" "~/org/journal"))
 
 #+end_src
 
@@ -766,7 +767,56 @@ Probably useless for me.
 
   (require 'org-tempo)
   (add-to-list 'org-structure-template-alist
-	       '("sl" . "src emacs-lisp"))
+               '("sl" . "src emacs-lisp"))
+
+#+end_src
+
+** Contacts
+
+#+begin_src emacs-lisp
+
+  (use-package org-contacts)
+
+#+end_src
+
+** Drag and drop integration
+
+#+begin_src emacs-lisp
+
+  (use-package org-download
+    :config
+    (add-hook 'dired-mode-hook 'org-download-enable))
+
+#+end_src
+
+** Journal
+
+#+begin_src emacs-lisp
+
+  (use-package org-journal
+    :init
+    (setq org-journal-dir "~/org/journal")
+    :config
+    (setq org-journal-enable-agenda-integration t))
+
+#+end_src
+
+** Pandoc integration
+
+#+begin_src emacs-lisp
+
+  (use-package ox-pandoc)
+
+#+end_src
+
+
+** Org roam
+
+#+begin_src emacs-lisp
+
+  (use-package org-roam
+    :init
+    (setq org-roam-directory "~/org/roam"))
 
 #+end_src
 
