@@ -713,8 +713,8 @@ Probably useless for me.
 
 #+begin_src emacs-lisp
 
-  (use-package highlight-quoted
-    :hook (emacs-lisp-mode-hook . highlight-quoted-mode))
+  ;; (use-package highlight-quoted
+  ;;   :hook (emacs-lisp-mode-hook . highlight-quoted-mode))
 
 #+end_src
 
