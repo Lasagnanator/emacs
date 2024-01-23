@@ -120,7 +120,7 @@
   "h" '(:ignore t :wk "H")
   "h f" '(helpful-callable :wk "Describe function")
   "h k" '(helpful-key :wk "Describe key")
-  "h m" '(helpful-mode :wk "Describe mode")
+  "h m" '(describe-mode :wk "Describe mode")
   "h o" '(helpful-symbol :wk "Describe symbol")
   "h q" '(help-quit :wk "Quit help loop")
   "h s" '(describe-syntax :wk "Describe syntax")
