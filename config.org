@@ -537,7 +537,12 @@ Integraton with DAP.
 
   (use-package dap-mode
     :config
-    (require 'dap-dlv-go)
+    (dap-mode 1)
+    (dap-ui-mode 1)
+    (dap-ui-controls-mode -1)
+    (when (+lang-active 'go) (require 'dap-dlv-go))
+    (when (+lang-active 'rust) (require 'dap-gdb-lldb))
+    (when (+lang-active 'python) (require 'dap-python))
     )
 
 #+end_src
@@ -616,14 +621,31 @@ Specific modes, configurations and packages for single languages.
 
 #+begin_src emacs-lisp
 
-  (when (+lang-active "go")
+  (when (+lang-active 'go)
     (use-package go-mode)
-    (if (executable-find "gopls")
-	(add-hook 'go-mode-hook 'lsp)
-      (message "Go LSP (gopls) is missing, please install it."))
-    (if (executable-find "dlv")
-	(require 'dap-dlv-go)
-      (message "Go debugger (delve) is missing, please install it.")))
+    (add-hook 'go-mode-hook 'lsp)
+    ;; (add-hook 'go-mode-hook '(lambda () (require 'dap-dlv-go)))
+    ;; (if (executable-find "gopls")
+    ;;     (add-hook 'go-mode-hook 'lsp)
+    ;;   (message "Go LSP (gopls) is missing, please install it."))
+    ;; (if (executable-find "dlv")
+    ;;     (require 'dap-dlv-go)
+    ;;   (message "Go debugger (delve) is missing, please install it."))
+    )
+
+#+end_src
+
+*** Rust
+
+#+begin_src emacs-lisp
+
+  (when (+lang-active 'go)
+    (use-package rustic)
+    (add-hook 'rust-mode-hook 'lsp)
+    ;; (if (executable-find "rust-analyzer")
+    ;;     (add-hook 'rust-mode-hook 'lsp)
+    ;;   (message "Rust LSP (rust-analyzer) is missing, please install it"))
+    (use-package rust-playground))
 
 #+end_src
 
@@ -633,6 +655,7 @@ Specific modes, configurations and packages for single languages.
 
   (when (+lang-active "python")
     (add-hook 'python-mode-hook #'python-ts-mode)
+    ;; (add-hook 'python-mode-hook '(lambda () (require 'dap-python)))
      (use-package lsp-pyright
        :hook (python-mode . (lambda ()
 			      (require 'lsp-pyright)

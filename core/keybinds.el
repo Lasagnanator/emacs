@@ -101,6 +101,14 @@
   "c t" '(lsp-find-type-definition :wk "Lookup type definition")
   "c r" '(lsp-rename :wk "Rename symbol"))
 
+;; Debugger
+(leader-keys
+  ;; :keymaps 'dap-mode-map
+  "d" '(:ignore t :wk "Debugger")
+  "d b" '(dap-breakpoint-toggle :wk "Toggle breakpoint")
+  "d s" '(dap-debug :wk "Start debugging")
+  "d r" '(dap-debug-restart :wk "Restart session"))
+
 ;; Org mode
 (leader-keys
   :keymaps 'org-mode-map
